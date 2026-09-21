@@ -531,24 +531,31 @@ body.hide-celebration .balloon {
     /* ---- PERFORMANCE OPTIMIZATIONS FOR MOBILE (ZERO LAG 60FPS) ---- */
     .building {
         box-shadow: 4px 8px 14px rgba(0,0,0,0.3) !important;
-        contain: layout paint !important;
+        overflow: visible !important;
     }
     .building:hover {
         transform: none !important;
     }
+    .building .roof,
+    .building .facade,
+    .building .sign,
+    .building .door-frame,
+    .building .steps-3d,
+    .roof-icon {
+        display: flex !important;
+        visibility: visible !important;
+    }
     .tree {
         filter: none !important; /* Eliminates 40 GPU blur filter passes per frame! */
-        contain: layout paint !important;
     }
     .decor {
         filter: none !important;
-        contain: layout paint !important;
     }
     .balloon {
         box-shadow: none !important;
     }
     #world {
-        contain: layout paint !important;
+        overflow: visible !important;
     }
 
     /* ---- QUIZ / FACILITY SCREENS ---- */
