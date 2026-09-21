@@ -23,9 +23,7 @@ const Campus = {
     },
 
     addGrass: function() {
-        const isMobile = window.innerWidth < 768;
-        const count = isMobile ? 15 : 50;
-        for (let i = 0; i < count; i++) {
+        for (let i = 0; i < 50; i++) {
             const grass = document.createElement('div');
             grass.style.position = 'absolute';
             grass.style.left = Math.random() * 1960 + 'px';
@@ -234,12 +232,10 @@ const Campus = {
             return false;
         };
 
-        // Plant fewer trees on mobile for performance
-        const isMobile = window.innerWidth < 768;
-        const maxTrees = isMobile ? 15 : 40;
+        // Attempt to plant only 40 perfectly safe trees across the entire map
         let planted = 0;
         let attempts = 0;
-        while(planted < maxTrees && attempts < 1000) {
+        while(planted < 40 && attempts < 1000) {
             let tx = 50 + Math.random() * 1800;
             let ty = 50 + Math.random() * 1800;
             let type = Math.floor(Math.random() * 4);

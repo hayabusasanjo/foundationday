@@ -530,9 +530,8 @@ body.hide-celebration .balloon {
 
     /* ---- PERFORMANCE OPTIMIZATIONS FOR MOBILE (ZERO LAG 60FPS) ---- */
     .building {
-        box-shadow: 3px 6px 10px rgba(0,0,0,0.25) !important;
+        box-shadow: 4px 8px 14px rgba(0,0,0,0.3) !important;
         overflow: visible !important;
-        transition: none !important;
     }
     .building:hover {
         transform: none !important;
@@ -565,12 +564,6 @@ body.hide-celebration .balloon {
     }
     .balloon {
         box-shadow: none !important;
-    }
-    .confetti-piece {
-        will-change: auto !important;
-    }
-    .npc-chat {
-        display: none !important; /* Hide chat bubbles on mobile for performance */
     }
     #world {
         overflow: visible !important;

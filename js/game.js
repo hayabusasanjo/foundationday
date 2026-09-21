@@ -121,19 +121,12 @@ const Game = {
         this.isPlaying = true;
     },
 
-    frameCount: 0,
-    isMobile: false,
-
     loop: function() {
         if (this.isPlaying) {
             Player.update();
             Interaction.update();
-            // On mobile: update NPCs and minimap every 3rd frame to save CPU
-            if (!this.isMobile || this.frameCount % 3 === 0) {
-                NPCManager.update();
-                Minimap.update();
-            }
-            this.frameCount++;
+            NPCManager.update();
+            Minimap.update();
         }
         requestAnimationFrame(() => this.loop());
     },
@@ -142,7 +135,7 @@ const Game = {
         const colors = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6', '#e67e22'];
         const container = document.getElementById('game-container');
         const isMobile = window.innerWidth < 768 || (pointer => pointer && pointer.matches)(window.matchMedia('(pointer: coarse)'));
-        const count = isMobile ? 10 : 60;
+        const count = isMobile ? 22 : 60;
         for (let i = 0; i < count; i++) {
             const c = document.createElement('div');
             c.className = 'confetti-piece';
@@ -159,7 +152,7 @@ const Game = {
         const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f', '#9b59b6'];
         const container = document.getElementById('game-container');
         const isMobile = window.innerWidth < 768 || (pointer => pointer && pointer.matches)(window.matchMedia('(pointer: coarse)'));
-        const count = isMobile ? 3 : 15;
+        const count = isMobile ? 6 : 15;
         for (let i = 0; i < count; i++) {
             const b = document.createElement('div');
             b.className = 'balloon';
