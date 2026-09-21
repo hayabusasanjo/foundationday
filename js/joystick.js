@@ -3,8 +3,9 @@ const Joystick = {
     base: null,
     knob: null,
     touchId: null,
-    maxRadius: 36,
+    maxRadius: 38,
     active: false,
+    initialized: false,
     x: 0,
     y: 0,
 
@@ -12,18 +13,29 @@ const Joystick = {
         this.zone = document.getElementById('joystick-zone');
         this.base = document.getElementById('joystick-base');
         this.knob = document.getElementById('joystick-knob');
-        if (!this.zone || !this.knob) return;
+        if (!this.zone || !this.knob || this.initialized) return;
+        this.initialized = true;
+
+        const setPlayerMovement = (active, x, y) => {
+            const p = (typeof Player !== 'undefined') ? Player : (window.Player || null);
+            if (p && p.joystick) {
+                p.joystick.active = active;
+                p.joystick.x = x;
+                p.joystick.y = y;
+            }
+        };
 
         const handleStart = (clientX, clientY, identifier) => {
             this.touchId = identifier;
             this.active = true;
-            this.handleMove(clientX, clientY);
+            this.handleMove(clientX, clientY, setPlayerMovement);
         };
 
-        // Touch handlers (supports multi-touch)
+        // Touch events (works on all mobile webviews and mobile browsers)
         this.zone.addEventListener('touchstart', (e) => {
             e.preventDefault();
-            if (this.touchId === null && e.changedTouches.length > 0) {
+            e.stopPropagation();
+            if (e.changedTouches && e.changedTouches.length > 0) {
                 const t = e.changedTouches[0];
                 handleStart(t.clientX, t.clientY, t.identifier);
             }
@@ -31,75 +43,72 @@ const Joystick = {
 
         window.addEventListener('touchmove', (e) => {
             if (!this.active) return;
-            for (let i = 0; i < e.changedTouches.length; i++) {
-                const t = e.changedTouches[i];
-                if (t.identifier === this.touchId) {
+            // Find our active touch
+            for (let i = 0; i < e.touches.length; i++) {
+                const t = e.touches[i];
+                if (t.identifier === this.touchId || this.touchId === null) {
                     e.preventDefault();
-                    this.handleMove(t.clientX, t.clientY);
-                    break;
+                    this.handleMove(t.clientX, t.clientY, setPlayerMovement);
+                    return;
                 }
             }
         }, { passive: false });
 
         const handleEnd = (identifier) => {
-            if (this.touchId === identifier) {
+            if (this.touchId === identifier || identifier === null || identifier === undefined) {
                 this.touchId = null;
                 this.active = false;
                 this.x = 0;
                 this.y = 0;
-                this.knob.style.transform = 'translate3d(0px, 0px, 0)';
-                if (window.Player && Player.joystick) {
-                    Player.joystick.active = false;
-                    Player.joystick.x = 0;
-                    Player.joystick.y = 0;
+                if (this.knob) {
+                    this.knob.style.transform = 'translate3d(0px, 0px, 0)';
                 }
+                setPlayerMovement(false, 0, 0);
             }
         };
 
         window.addEventListener('touchend', (e) => {
+            if (!this.active) return;
             for (let i = 0; i < e.changedTouches.length; i++) {
-                handleEnd(e.changedTouches[i].identifier);
+                if (e.changedTouches[i].identifier === this.touchId) {
+                    handleEnd(this.touchId);
+                    return;
+                }
+            }
+            // If all touches lifted, ensure reset
+            if (e.touches.length === 0) {
+                handleEnd(this.touchId);
             }
         });
 
-        window.addEventListener('touchcancel', (e) => {
-            for (let i = 0; i < e.changedTouches.length; i++) {
-                handleEnd(e.changedTouches[i].identifier);
-            }
+        window.addEventListener('touchcancel', () => {
+            handleEnd(this.touchId);
         });
 
-        // Mouse drag support for testing on desktop
+        // Mouse drag fallback (for testing on desktop)
         let isMouseDown = false;
         this.zone.addEventListener('mousedown', (e) => {
             isMouseDown = true;
             this.active = true;
-            this.handleMove(e.clientX, e.clientY);
+            this.handleMove(e.clientX, e.clientY, setPlayerMovement);
         });
 
         window.addEventListener('mousemove', (e) => {
             if (isMouseDown) {
-                this.handleMove(e.clientX, e.clientY);
+                this.handleMove(e.clientX, e.clientY, setPlayerMovement);
             }
         });
 
         window.addEventListener('mouseup', () => {
             if (isMouseDown) {
                 isMouseDown = false;
-                this.active = false;
-                this.x = 0;
-                this.y = 0;
-                this.knob.style.transform = 'translate3d(0px, 0px, 0)';
-                if (window.Player && Player.joystick) {
-                    Player.joystick.active = false;
-                    Player.joystick.x = 0;
-                    Player.joystick.y = 0;
-                }
+                handleEnd(null);
             }
         });
     },
 
-    handleMove: function(clientX, clientY) {
-        if (!this.base) return;
+    handleMove: function(clientX, clientY, callback) {
+        if (!this.base || !this.knob) return;
         const rect = this.base.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
@@ -115,23 +124,21 @@ const Joystick = {
 
         this.knob.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
 
-        // Deadzone of 5px to prevent drifting
-        if (distance > 5) {
+        // Deadzone of 4px
+        if (distance > 4) {
             this.x = dx / this.maxRadius;
             this.y = dy / this.maxRadius;
-            if (window.Player && Player.joystick) {
-                Player.joystick.active = true;
-                Player.joystick.x = this.x;
-                Player.joystick.y = this.y;
+            if (callback) {
+                callback(true, this.x, this.y);
             }
         } else {
             this.x = 0;
             this.y = 0;
-            if (window.Player && Player.joystick) {
-                Player.joystick.active = false;
-                Player.joystick.x = 0;
-                Player.joystick.y = 0;
+            if (callback) {
+                callback(false, 0, 0);
             }
         }
     }
 };
+
+window.Joystick = Joystick;

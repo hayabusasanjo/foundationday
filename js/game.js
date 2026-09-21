@@ -12,6 +12,9 @@ const Game = {
         Minimap.init();
         Facilities.init();
         NPCManager.init();
+        if (typeof Joystick !== 'undefined') {
+            Joystick.init();
+        }
         
         // FOUNDATION DAY CELEBRATION EFFECTS!
         this.startConfetti();

@@ -20,11 +20,6 @@ const Player = {
         window.addEventListener('keyup', (e) => {
             if(this.keys.hasOwnProperty(e.key)) { this.keys[e.key] = false; }
         });
-
-        // Initialize Virtual Joystick for mobile
-        if (window.Joystick) {
-            Joystick.init();
-        }
     },
 
     update: function() {
@@ -93,3 +88,5 @@ const Player = {
         }
     }
 };
+
+window.Player = Player;
