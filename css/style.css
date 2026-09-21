@@ -268,13 +268,13 @@ button:active { transform: scale(0.95); }
 #btn-return-campus:active { transform: translateY(6px); box-shadow: none; }
 
 /* Foundation Day Confetti Celebration! */
-.confetti-piece { position: absolute; top: -20px; width: 12px; height: 12px; z-index: 9999; pointer-events: none; opacity: 0.8; animation: confettiFall linear infinite; will-change: transform; }
+.confetti-piece { position: absolute; top: -20px; width: 12px; height: 12px; z-index: 5; pointer-events: none; opacity: 0.8; animation: confettiFall linear infinite; will-change: transform; }
 @keyframes confettiFall {
     0% { transform: translateY(0vh) rotate(0deg) scale(1); }
     100% { transform: translateY(110vh) rotate(720deg) scale(0.5); opacity: 0.2; }
 }
 
-.balloon { position: absolute; bottom: -100px; width: 40px; height: 50px; border-radius: 50%; box-shadow: inset -5px -5px 10px rgba(0,0,0,0.2), inset 5px 5px 10px rgba(255,255,255,0.4); z-index: 9998; pointer-events: none; opacity: 0.9; animation: balloonRise linear infinite; will-change: transform; }
+.balloon { position: absolute; bottom: -100px; width: 40px; height: 50px; border-radius: 50%; box-shadow: inset -5px -5px 10px rgba(0,0,0,0.2), inset 5px 5px 10px rgba(255,255,255,0.4); z-index: 4; pointer-events: none; opacity: 0.9; animation: balloonRise linear infinite; will-change: transform; }
 .balloon::before { content: ''; position: absolute; bottom: -8px; left: 16px; width: 8px; height: 10px; background: inherit; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
 .balloon::after { content: ''; position: absolute; bottom: -40px; left: 19px; width: 2px; height: 40px; background: rgba(255,255,255,0.5); }
 @keyframes balloonRise {
@@ -307,14 +307,46 @@ body.hide-celebration .balloon {
 #mobile-controls { display: none; }
 
 @media (max-width: 768px), (pointer: coarse) {
+
+    /* ---- TITLE SCREEN ---- */
+    #title-screen { justify-content: flex-start; padding-top: 40px; overflow-y: auto; }
+    .branding { padding: 0 20px; margin-bottom: 10px; }
+    #title-screen h1 { font-size: 1.8rem !important; line-height: 1.2 !important; word-break: break-word; }
+    #title-screen h2 { font-size: 0.9rem !important; }
+    .event { font-size: 0.9rem !important; margin-bottom: 12px !important; }
+    .setup-container { padding: 20px; width: 94%; max-width: 400px; margin-bottom: 30px; gap: 12px; }
+    .setup-container p { font-size: 1rem; }
+    #player-name-input { font-size: 1rem; padding: 10px 16px; }
+    .gender-btn { font-size: 0.9rem; padding: 8px; }
+    #btn-play { font-size: 1.2rem; padding: 14px 30px; }
+
+    /* ---- HUD ---- */
+    #hud {
+        top: 8px;
+        left: 8px;
+        padding: 6px 12px;
+        gap: 8px;
+        max-width: calc(100vw - 16px);
+        flex-wrap: wrap;
+        border-radius: 16px;
+    }
+    .hud-item { font-size: 0.75rem; }
+    #hud-level { font-size: 0.8rem; padding-right: 8px; }
+    #hud-xp-container { width: 70px; }
+    #btn-toggle-celebration { font-size: 0.7rem !important; padding: 3px 7px !important; }
+
+    /* ---- HIDE LEADERBOARD COMPLETELY ---- */
+    #leaderboard-panel { display: none !important; }
+
+    /* ---- D-PAD CONTROLS ---- */
     #mobile-controls {
         display: flex;
         position: fixed;
-        bottom: 20px;
-        left: 20px;
+        bottom: 16px;
+        left: 16px;
         z-index: 500;
         align-items: flex-end;
-        gap: 20px;
+        gap: 14px;
         pointer-events: auto;
     }
 
@@ -322,114 +354,96 @@ body.hide-celebration .balloon {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 4px;
+        gap: 3px;
     }
 
-    .dpad-row {
-        display: flex;
-        gap: 4px;
-    }
+    .dpad-row { display: flex; gap: 3px; }
 
     .dpad-btn {
-        width: 56px;
-        height: 56px;
-        font-size: 1.5rem;
-        background: rgba(0,0,0,0.55);
+        width: 50px;
+        height: 50px;
+        font-size: 1.3rem;
+        background: rgba(20,20,20,0.65);
         color: white;
-        border: 3px solid rgba(255,255,255,0.3);
-        border-radius: 12px;
+        border: 2px solid rgba(255,255,255,0.35);
+        border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
         padding: 0;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-        backdrop-filter: blur(4px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        backdrop-filter: blur(6px);
         -webkit-tap-highlight-color: transparent;
         user-select: none;
     }
 
     .dpad-btn:active {
-        background: rgba(255,255,255,0.3);
-        transform: scale(0.9);
+        background: rgba(255,255,255,0.25);
+        transform: scale(0.88);
     }
 
     .action-btn {
-        width: 70px;
-        height: 70px;
-        font-size: 1.2rem;
+        width: 64px;
+        height: 64px;
+        font-size: 1rem;
         font-weight: 900;
-        background: rgba(231, 76, 60, 0.85);
+        background: rgba(231, 76, 60, 0.9);
         color: white;
         border: 3px solid rgba(255,255,255,0.4);
         border-radius: 50%;
-        box-shadow: 0 4px 15px rgba(231,76,60,0.5);
+        box-shadow: 0 6px 18px rgba(231,76,60,0.6);
         -webkit-tap-highlight-color: transparent;
         user-select: none;
-        backdrop-filter: blur(4px);
-        margin-bottom: 4px;
+        backdrop-filter: blur(6px);
+        margin-bottom: 6px;
     }
 
     .action-btn:active {
-        transform: scale(0.9);
-        background: rgba(192,57,43,0.9);
+        transform: scale(0.88);
+        background: rgba(192,57,43,0.95);
     }
 
-    /* Scale down HUD on mobile */
-    #hud {
-        top: 10px;
-        left: 10px;
-        padding: 8px 14px;
-        gap: 10px;
-        max-width: calc(100vw - 20px);
-    }
-    .hud-item { font-size: 0.85rem; }
-    #hud-level { font-size: 0.9rem; padding-right: 10px; }
-    #hud-xp-container { width: 90px; }
-
-    /* Move leaderboard below on mobile */
-    #leaderboard-panel {
-        display: none;
-    }
-
-    /* Title screen mobile */
-    #title-screen h1 { font-size: 2rem; }
-    .branding { padding: 0 15px; }
-    .setup-container { padding: 20px; width: 92%; }
-
-    /* Quiz screen mobile */
-    #quiz-screen { padding: 10px; }
-    #question-text { font-size: 1.1rem; }
-    #choices-container { gap: 8px; }
-    .choice-btn { font-size: 0.95rem; padding: 12px; }
-
-    /* Interaction prompt above the dpad */
-    #interaction-prompt {
-        bottom: 155px;
-        left: 20px;
-        transform: none;
-        font-size: 0.8rem;
-        padding: 6px 10px;
-    }
-
-    /* Minimap smaller on mobile */
-    #minimap {
-        width: 80px;
-        height: 80px;
-        bottom: 20px;
-    }
-
-    /* Logout button - keep visible on mobile but smaller */
+    /* ---- LOGOUT BUTTON: move above D-pad ---- */
     #btn-logout-fixed {
-        font-size: 0.8rem !important;
-        padding: 10px 16px !important;
-        bottom: 12px !important;
-        left: 200px !important;
+        font-size: 0.72rem !important;
+        padding: 8px 12px !important;
+        bottom: 200px !important;
+        left: 16px !important;
+        border-radius: 10px !important;
     }
 
-    /* Celebration toggle smaller on mobile */
-    #btn-toggle-celebration {
-        font-size: 0.75rem !important;
-        padding: 4px 8px !important;
+    /* ---- MINIMAP ---- */
+    #minimap {
+        width: 75px;
+        height: 75px;
+        bottom: 16px;
+        right: 12px;
     }
+
+    /* ---- INTERACTION PROMPT ---- */
+    #interaction-prompt {
+        bottom: 210px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.78rem;
+        padding: 6px 12px;
+        white-space: nowrap;
+    }
+
+    /* ---- QUIZ / FACILITY SCREENS ---- */
+    #quiz-screen { padding: 12px 10px; }
+    #building-title { font-size: 1.4rem; }
+    #building-subtitle { font-size: 0.85rem; margin-bottom: 16px; }
+    .npc-container { padding: 12px; gap: 12px; margin-bottom: 16px; }
+    .npc-avatar { width: 60px; height: 60px; }
+    .dialogue { font-size: 0.95rem; }
+    #btn-start-quiz, #btn-leave-building, #btn-next-question, #btn-return-campus { font-size: 1rem; padding: 14px; }
+    #question-text { font-size: 1rem; min-height: 60px; margin-bottom: 18px; }
+    #choices-container { gap: 10px; }
+    .choice-btn { font-size: 0.9rem; padding: 14px 16px; }
+    #feedback-container { padding: 16px; margin-top: 16px; }
+    #feedback-title { font-size: 1.1rem; }
+    #feedback-text { font-size: 0.9rem; margin-bottom: 16px; }
+    #results-score { font-size: 2rem; margin: 16px 0; }
 }
