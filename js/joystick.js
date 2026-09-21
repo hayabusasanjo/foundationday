@@ -61,7 +61,7 @@ const Joystick = {
                 this.x = 0;
                 this.y = 0;
                 if (this.knob) {
-                    this.knob.style.transform = 'translate3d(0px, 0px, 0)';
+                    this.knob.style.setProperty('transform', 'translate3d(0px, 0px, 0)', 'important');
                 }
                 setPlayerMovement(false, 0, 0);
             }
@@ -122,7 +122,7 @@ const Joystick = {
             dy = (dy / distance) * this.maxRadius;
         }
 
-        this.knob.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
+        this.knob.style.setProperty('transform', `translate3d(${dx}px, ${dy}px, 0)`, 'important');
 
         // Deadzone of 4px
         if (distance > 4) {

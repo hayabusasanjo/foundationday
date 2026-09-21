@@ -381,15 +381,22 @@ body.hide-celebration .balloon {
         right: auto !important;
         top: auto !important;
         transform: none !important;
-        font-size: 0.65rem !important;
+        font-size: 0.68rem !important;
         font-weight: 800 !important;
-        padding: 6px 12px !important;
+        padding: 7px 14px !important;
         border-radius: 8px !important;
         white-space: nowrap !important;
+        width: auto !important;
+        max-width: none !important;
         z-index: 1100 !important;
         box-shadow: 0 3px 8px rgba(0,0,0,0.4) !important;
         border: 2px solid white !important;
-        max-width: 160px !important;
+        background: #e74c3c !important;
+        color: white !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
         cursor: pointer !important;
     }
 
@@ -451,7 +458,11 @@ body.hide-celebration .balloon {
         border: 2px solid rgba(255, 255, 255, 0.9) !important;
         box-shadow: 0 4px 12px rgba(0,0,0,0.6), inset 0 2px 4px rgba(255,255,255,0.8) !important;
         pointer-events: none !important;
-        transform: translate3d(0, 0, 0) !important;
+        top: 50% !important;
+        left: 50% !important;
+        margin-top: -24px !important;
+        margin-left: -24px !important;
+        transform: translate3d(0, 0, 0);
         will-change: transform !important;
     }
 
