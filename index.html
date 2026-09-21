@@ -100,15 +100,12 @@
             
             <!-- Mobile Controls -->
             <div id="mobile-controls">
-                <div id="dpad">
-                    <button id="btn-up" class="dpad-btn">↑</button>
-                    <div class="dpad-row">
-                        <button id="btn-left" class="dpad-btn">←</button>
-                        <button id="btn-down" class="dpad-btn">↓</button>
-                        <button id="btn-right" class="dpad-btn">→</button>
+                <div id="joystick-zone">
+                    <div id="joystick-base">
+                        <div id="joystick-knob"></div>
                     </div>
                 </div>
-                <button id="btn-interact" class="action-btn">E</button>
+                <button id="btn-interact" class="action-btn" aria-label="Interact">E</button>
             </div>
         </div>
 
@@ -225,6 +222,7 @@
     <script src="js/minimap.js"></script>
     <script src="js/npc.js"></script>
     <script src="js/facilities.js"></script>
+    <script src="js/joystick.js"></script>
     <script src="js/player.js"></script>
     <script src="js/interaction.js"></script>
     <script src="js/quiz.js"></script>

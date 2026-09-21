@@ -8,11 +8,18 @@ const Interaction = {
             }
         });
 
-        document.getElementById('btn-interact').addEventListener('click', () => {
+        const interactBtn = document.getElementById('btn-interact');
+        const triggerInteract = (e) => {
+            if (e) e.preventDefault();
             if (this.activeBuilding && Game.isPlaying) {
                 this.enterBuilding();
             }
-        });
+        };
+
+        if (interactBtn) {
+            interactBtn.addEventListener('click', triggerInteract);
+            interactBtn.addEventListener('touchstart', triggerInteract, { passive: false });
+        }
     },
 
     update: function() {
@@ -35,11 +42,14 @@ const Interaction = {
         if (found !== this.activeBuilding) {
             this.activeBuilding = found;
             const prompt = document.getElementById('interaction-prompt');
+            const interactBtn = document.getElementById('btn-interact');
             if (found) {
                 prompt.innerHTML = `Enter ${found.id} <br><kbd>E</kbd>`;
                 prompt.classList.remove('hidden');
+                if (interactBtn) interactBtn.classList.add('ready');
             } else {
                 prompt.classList.add('hidden');
+                if (interactBtn) interactBtn.classList.remove('ready');
             }
         }
     },

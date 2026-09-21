@@ -23,7 +23,8 @@ const Campus = {
     },
 
     addGrass: function() {
-        for (let i = 0; i < 300; i++) {
+        // 50 lightweight grass tufts for smooth 60fps performance on mobile
+        for (let i = 0; i < 50; i++) {
             const grass = document.createElement('div');
             grass.style.position = 'absolute';
             grass.style.left = Math.random() * 1960 + 'px';

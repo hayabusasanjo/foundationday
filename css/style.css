@@ -42,7 +42,10 @@ button:active { transform: scale(0.95); }
 #world { 
     position: absolute; top: 0; left: 0; width: 2000px; height: 2000px; 
     background-color: var(--grass-bg); 
-    transform-origin: 0 0; transition: transform 0.1s linear;
+    transform-origin: 0 0;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 #map { width: 100%; height: 100%; position: absolute; }
 
@@ -302,19 +305,19 @@ body.hide-celebration .balloon {
 }
 
 /* ========================================
-   MOBILE D-PAD CONTROLS
+   MOBILE JOYSTICK & CONTROLS
    ======================================== */
 #mobile-controls { display: none; }
 
 @media (max-width: 768px), (pointer: coarse) {
 
     /* ---- TITLE SCREEN ---- */
-    #title-screen { justify-content: flex-start; padding-top: 40px; overflow-y: auto; }
+    #title-screen { justify-content: flex-start; padding-top: 36px; overflow-y: auto; }
     .branding { padding: 0 20px; margin-bottom: 10px; }
     #title-screen h1 { font-size: 1.8rem !important; line-height: 1.2 !important; word-break: break-word; }
     #title-screen h2 { font-size: 0.9rem !important; }
     .event { font-size: 0.9rem !important; margin-bottom: 12px !important; }
-    .setup-container { padding: 20px; width: 94%; max-width: 400px; margin-bottom: 30px; gap: 12px; }
+    .setup-container { padding: 20px; width: 92%; max-width: 380px; margin-bottom: 30px; gap: 12px; }
     .setup-container p { font-size: 1rem; }
     #player-name-input { font-size: 1rem; padding: 10px 16px; }
     .gender-btn { font-size: 0.9rem; padding: 8px; }
@@ -326,109 +329,175 @@ body.hide-celebration .balloon {
         left: 8px;
         padding: 6px 12px;
         gap: 8px;
-        max-width: calc(100vw - 16px);
+        max-width: calc(100vw - 110px); /* Leave room for top-right minimap */
         flex-wrap: wrap;
         border-radius: 16px;
+        z-index: 160;
     }
     .hud-item { font-size: 0.75rem; }
     #hud-level { font-size: 0.8rem; padding-right: 8px; }
-    #hud-xp-container { width: 70px; }
+    #hud-xp-container { width: 65px; }
     #btn-toggle-celebration { font-size: 0.7rem !important; padding: 3px 7px !important; }
 
-    /* ---- HIDE LEADERBOARD COMPLETELY ---- */
+    /* ---- HIDE LEADERBOARD ON MOBILE ---- */
     #leaderboard-panel { display: none !important; }
 
-    /* ---- D-PAD CONTROLS ---- */
+    /* ---- MINIMAP ON MOBILE (TOP-RIGHT, NEVER OVERLAPS E BUTTON) ---- */
+    #minimap-container {
+        position: fixed !important;
+        top: 10px !important;
+        right: 10px !important;
+        bottom: auto !important;
+        left: auto !important;
+        width: 82px !important;
+        height: 82px !important;
+        border: 2px solid rgba(255,255,255,0.4) !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+        z-index: 200 !important;
+        pointer-events: none !important;
+    }
+
+    /* ---- MOBILE CONTROLS CONTAINER ---- */
     #mobile-controls {
-        display: flex;
+        display: block !important;
         position: fixed;
-        bottom: 16px;
-        left: 16px;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
         z-index: 500;
-        align-items: flex-end;
-        gap: 14px;
+        pointer-events: none;
+    }
+
+    /* ---- VIRTUAL ANALOG JOYSTICK (BOTTOM-LEFT) ---- */
+    #joystick-zone {
+        position: absolute;
+        bottom: 25px;
+        left: 20px;
+        width: 120px;
+        height: 120px;
         pointer-events: auto;
+        touch-action: none;
+        user-select: none;
+        -webkit-user-select: none;
     }
 
-    #dpad {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 3px;
-    }
-
-    .dpad-row { display: flex; gap: 3px; }
-
-    .dpad-btn {
-        width: 50px;
-        height: 50px;
-        font-size: 1.3rem;
-        background: rgba(20,20,20,0.65);
-        color: white;
-        border: 2px solid rgba(255,255,255,0.35);
-        border-radius: 10px;
+    #joystick-base {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(40,40,40,0.4) 0%, rgba(10,10,10,0.7) 100%);
+        border: 3px solid rgba(255, 255, 255, 0.35);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.5), inset 0 2px 6px rgba(255,255,255,0.2);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
         display: flex;
         align-items: center;
         justify-content: center;
-        cursor: pointer;
-        padding: 0;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-        backdrop-filter: blur(6px);
-        -webkit-tap-highlight-color: transparent;
-        user-select: none;
     }
 
-    .dpad-btn:active {
-        background: rgba(255,255,255,0.25);
-        transform: scale(0.88);
-    }
-
-    .action-btn {
-        width: 64px;
-        height: 64px;
-        font-size: 1rem;
-        font-weight: 900;
-        background: rgba(231, 76, 60, 0.9);
-        color: white;
-        border: 3px solid rgba(255,255,255,0.4);
+    #joystick-base::after {
+        content: '';
+        position: absolute;
+        width: 30px;
+        height: 30px;
         border-radius: 50%;
-        box-shadow: 0 6px 18px rgba(231,76,60,0.6);
-        -webkit-tap-highlight-color: transparent;
-        user-select: none;
-        backdrop-filter: blur(6px);
-        margin-bottom: 6px;
+        border: 1px dashed rgba(255,255,255,0.25);
+    }
+
+    #joystick-knob {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 35%, #ffffff 0%, #bdc3c7 70%, #7f8c8d 100%);
+        border: 2px solid rgba(255, 255, 255, 0.9);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.6), inset 0 2px 4px rgba(255,255,255,0.8);
+        pointer-events: none;
+        transform: translate3d(0, 0, 0);
+        will-change: transform;
+    }
+
+    /* ---- ACTION / INTERACT 'E' BUTTON (BOTTOM-RIGHT) ---- */
+    .action-btn {
+        position: absolute !important;
+        bottom: 25px !important;
+        right: 22px !important;
+        width: 72px !important;
+        height: 72px !important;
+        font-size: 1.35rem !important;
+        font-weight: 900 !important;
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%) !important;
+        color: white !important;
+        border: 3px solid rgba(255,255,255,0.6) !important;
+        border-radius: 50% !important;
+        box-shadow: 0 6px 18px rgba(231,76,60,0.55), inset 0 2px 4px rgba(255,255,255,0.4) !important;
+        -webkit-tap-highlight-color: transparent !important;
+        user-select: none !important;
+        -webkit-user-select: none !important;
+        backdrop-filter: blur(6px) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        pointer-events: auto !important;
+        touch-action: manipulation !important;
+        transition: transform 0.1s ease, box-shadow 0.2s ease !important;
     }
 
     .action-btn:active {
-        transform: scale(0.88);
-        background: rgba(192,57,43,0.95);
+        transform: scale(0.9) !important;
+        background: linear-gradient(135deg, #c0392b 0%, #962d22 100%) !important;
     }
 
-    /* ---- LOGOUT BUTTON: move above D-pad ---- */
+    /* Glow & pulse when near an entrance */
+    .action-btn.ready {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%) !important;
+        border-color: rgba(255,255,255,0.9) !important;
+        box-shadow: 0 0 22px rgba(46, 204, 113, 0.9), inset 0 2px 4px rgba(255,255,255,0.6) !important;
+        animation: pulseReady 0.8s infinite alternate !important;
+    }
+
+    @keyframes pulseReady {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.1); }
+    }
+
+    /* ---- LOGOUT BUTTON (BOTTOM-CENTER, SAFE FROM THUMBS) ---- */
     #btn-logout-fixed {
-        font-size: 0.72rem !important;
-        padding: 8px 12px !important;
-        bottom: 200px !important;
-        left: 16px !important;
-        border-radius: 10px !important;
-    }
-
-    /* ---- MINIMAP ---- */
-    #minimap {
-        width: 75px;
-        height: 75px;
-        bottom: 16px;
-        right: 12px;
+        font-size: 0.7rem !important;
+        padding: 6px 14px !important;
+        bottom: 18px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        border-radius: 8px !important;
+        white-space: nowrap !important;
+        z-index: 450 !important;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.4) !important;
     }
 
     /* ---- INTERACTION PROMPT ---- */
     #interaction-prompt {
-        bottom: 210px;
+        bottom: 170px;
         left: 50%;
         transform: translateX(-50%);
         font-size: 0.78rem;
         padding: 6px 12px;
         white-space: nowrap;
+    }
+
+    /* ---- PERFORMANCE OPTIMIZATIONS FOR MOBILE (ZERO LAG) ---- */
+    .building {
+        box-shadow: 6px 12px 18px rgba(0,0,0,0.35) !important;
+    }
+    .building:hover {
+        transform: none !important;
+    }
+    .tree {
+        filter: drop-shadow(0 4px 4px rgba(0,0,0,0.2)) !important;
+    }
+    .balloon {
+        box-shadow: none !important;
     }
 
     /* ---- QUIZ / FACILITY SCREENS ---- */

@@ -26,11 +26,9 @@ const Minimap = {
             dot.style.width = d.w + 'px';
             dot.style.height = d.h + 'px';
             
-            // Map coordinates to minimap ratio
-            const mx = (d.x / this.mapWidth) * this.miniWidth;
-            const my = (d.y / this.mapHeight) * this.miniHeight;
-            dot.style.left = mx + 'px';
-            dot.style.top = my + 'px';
+            // Map coordinates to percentage ratio so it scales to any minimap size
+            dot.style.left = ((d.x / this.mapWidth) * 100) + '%';
+            dot.style.top = ((d.y / this.mapHeight) * 100) + '%';
             
             this.container.appendChild(dot);
         });
@@ -39,10 +37,10 @@ const Minimap = {
     update: function() {
         if (!Player || !this.playerDot) return;
         
-        const px = (Player.x / this.mapWidth) * this.miniWidth;
-        const py = (Player.y / this.mapHeight) * this.miniHeight;
+        const px = (Player.x / this.mapWidth) * 100;
+        const py = (Player.y / this.mapHeight) * 100;
         
-        this.playerDot.style.left = px + 'px';
-        this.playerDot.style.top = py + 'px';
+        this.playerDot.style.left = px + '%';
+        this.playerDot.style.top = py + '%';
     }
 };

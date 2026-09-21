@@ -130,7 +130,9 @@ const Game = {
     startConfetti: function() {
         const colors = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6', '#e67e22'];
         const container = document.getElementById('game-container');
-        for (let i = 0; i < 60; i++) {
+        const isMobile = window.innerWidth < 768 || (pointer => pointer && pointer.matches)(window.matchMedia('(pointer: coarse)'));
+        const count = isMobile ? 22 : 60;
+        for (let i = 0; i < count; i++) {
             const c = document.createElement('div');
             c.className = 'confetti-piece';
             c.style.left = Math.random() * 100 + 'vw';
@@ -145,7 +147,9 @@ const Game = {
     startBalloons: function() {
         const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f', '#9b59b6'];
         const container = document.getElementById('game-container');
-        for (let i = 0; i < 15; i++) {
+        const isMobile = window.innerWidth < 768 || (pointer => pointer && pointer.matches)(window.matchMedia('(pointer: coarse)'));
+        const count = isMobile ? 6 : 15;
+        for (let i = 0; i < count; i++) {
             const b = document.createElement('div');
             b.className = 'balloon';
             b.style.left = Math.random() * 100 + 'vw';

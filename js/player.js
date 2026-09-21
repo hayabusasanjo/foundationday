@@ -4,7 +4,7 @@ const Player = {
     speed: 6,
     element: null,
     keys: { w: false, a: false, s: false, d: false, ArrowUp: false, ArrowLeft: false, ArrowDown: false, ArrowRight: false },
-    dpad: { up: false, left: false, down: false, right: false },
+    joystick: { active: false, x: 0, y: 0 },
     
     init: function() {
         this.element = document.getElementById('player');
@@ -21,19 +21,10 @@ const Player = {
             if(this.keys.hasOwnProperty(e.key)) { this.keys[e.key] = false; }
         });
 
-        // Mobile dpad
-        const bindBtn = (id, dir) => {
-            const btn = document.getElementById(id);
-            btn.addEventListener('touchstart', (e) => { e.preventDefault(); this.dpad[dir] = true; });
-            btn.addEventListener('touchend', (e) => { e.preventDefault(); this.dpad[dir] = false; });
-            btn.addEventListener('mousedown', (e) => { this.dpad[dir] = true; });
-            btn.addEventListener('mouseup', (e) => { this.dpad[dir] = false; });
-            btn.addEventListener('mouseleave', (e) => { this.dpad[dir] = false; });
-        };
-        bindBtn('btn-up', 'up');
-        bindBtn('btn-left', 'left');
-        bindBtn('btn-down', 'down');
-        bindBtn('btn-right', 'right');
+        // Initialize Virtual Joystick for mobile
+        if (window.Joystick) {
+            Joystick.init();
+        }
     },
 
     update: function() {
@@ -42,15 +33,22 @@ const Player = {
         let dx = 0;
         let dy = 0;
 
-        if(this.keys.w || this.keys.ArrowUp || this.dpad.up) dy -= 1;
-        if(this.keys.s || this.keys.ArrowDown || this.dpad.down) dy += 1;
-        if(this.keys.a || this.keys.ArrowLeft || this.dpad.left) dx -= 1;
-        if(this.keys.d || this.keys.ArrowRight || this.dpad.right) dx += 1;
+        // Check virtual joystick first (360-degree analog)
+        if (this.joystick && this.joystick.active) {
+            dx = this.joystick.x;
+            dy = this.joystick.y;
+        } else {
+            // Keyboard inputs
+            if(this.keys.w || this.keys.ArrowUp) dy -= 1;
+            if(this.keys.s || this.keys.ArrowDown) dy += 1;
+            if(this.keys.a || this.keys.ArrowLeft) dx -= 1;
+            if(this.keys.d || this.keys.ArrowRight) dx += 1;
 
-        if (dx !== 0 && dy !== 0) {
-            const length = Math.sqrt(dx*dx + dy*dy);
-            dx /= length;
-            dy /= length;
+            if (dx !== 0 && dy !== 0) {
+                const length = Math.sqrt(dx*dx + dy*dy);
+                dx /= length;
+                dy /= length;
+            }
         }
 
         if (dx !== 0 || dy !== 0) {
@@ -61,7 +59,7 @@ const Player = {
             nextX = Math.max(20, Math.min(1980, nextX));
             nextY = Math.max(20, Math.min(1980, nextY));
 
-            // Collision check
+            // Collision check with wall-sliding
             if (!Campus.isSolid(nextX, this.y)) {
                 this.x = nextX;
             }
@@ -75,11 +73,11 @@ const Player = {
             this.element.classList.remove('walking');
         }
 
-        // Camera follow
+        // Camera follow - use Math.round and translate3d for smooth 60fps GPU acceleration
         const world = document.getElementById('world');
-        const cx = window.innerWidth / 2 - this.x;
-        const cy = window.innerHeight / 2 - this.y;
-        world.style.transform = `translate(${cx}px, ${cy}px)`;
+        const cx = Math.round(window.innerWidth / 2 - this.x);
+        const cy = Math.round(window.innerHeight / 2 - this.y);
+        world.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
     },
 
     updatePosition: function() {
