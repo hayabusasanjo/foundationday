@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Campus Quest - Collegio de Montalban</title>
+    <!-- Use Google Fonts for cleaner typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Title Screen -->
+        <div id="title-screen" class="screen active">
+            <div class="branding">
+                <h2 style="font-size: 1.2rem; letter-spacing: 3px;">WELCOME TO</h2>
+                <h1 style="font-size: 3.5rem; line-height: 1.1; margin: 10px 0;">COLEGIO DE MONTALBAN</h1>
+                <h3 class="event">FOUNDATION DAY 2026</h3>
+            </div>
+            
+            <div class="setup-container">
+                <p>Create your Student Profile</p>
+                <input type="text" id="player-name-input" placeholder="Enter your name" maxlength="12">
+                <div class="gender-selection">
+                    <button type="button" class="gender-btn active" id="btn-male" data-gender="male">MALE</button>
+                    <button type="button" class="gender-btn" id="btn-female" data-gender="female">FEMALE</button>
+                </div>
+                <button id="btn-play">START JOURNEY</button>
+            </div>
+        </div>
+
+        <!-- Main Campus UI -->
+        <div id="campus-screen" class="screen">
+            <!-- RPG Style HUD -->
+            <div id="hud">
+                <div class="hud-item" id="hud-level"><span id="hud-player-name">Player</span> (LVL <span id="level-label">1</span>)</div>
+                <div class="hud-item" id="hud-xp-container">
+                    <span class="xp-label">XP</span>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="hud-xp-fill"></div>
+                    </div>
+                </div>
+                <div class="hud-item" id="hud-coins">🪙 <span id="coin-count">0</span></div>
+                <button id="btn-toggle-celebration" class="hud-item" style="padding: 5px 10px; font-size: 0.9rem; background: #e74c3c; color: white;">🎉 OFF</button>
+            </div>
+
+            <!-- Leaderboard Panel -->
+            <div id="leaderboard-panel">
+                <h3>🏆 TOP STUDENTS</h3>
+                <div class="dept-leaderboard">
+                    <h4>ICS</h4>
+                    <ul id="list-ICS"></ul>
+                </div>
+                <div class="dept-leaderboard">
+                    <h4>ITE</h4>
+                    <ul id="list-ITE"></ul>
+                </div>
+                <div class="dept-leaderboard">
+                    <h4>IBE</h4>
+                    <ul id="list-IBE"></ul>
+                </div>
+            </div>
+
+            <!-- Minimap -->
+            <div id="minimap-container">
+                <div id="minimap-player"></div>
+            </div>
+            
+            <!-- Global Logout / New Player -->
+            <button id="btn-logout-fixed" style="position:fixed; bottom:20px; left:20px; background:#e74c3c; color:white; padding:15px 30px; font-size:1.2rem; font-weight:900; border:4px solid white; border-radius:10px; box-shadow:0 10px 20px rgba(0,0,0,0.5); z-index:100; cursor:pointer;">🚪 LOG OUT / NEW STUDENT</button>
+
+            <!-- Game World -->
+            <div id="world">
+                <div id="map"></div>
+                <!-- Player Character -->
+                <div id="player">
+                    <div class="player-shadow"></div>
+                    <div class="player-sprite">
+                        <div class="player-head">
+                            <div class="player-hair"></div>
+                            <div class="player-eyes"></div>
+                        </div>
+                        <div class="player-body">
+                            <div class="player-backpack"></div>
+                            <div class="player-arms">
+                                <div class="player-held-item"></div>
+                            </div>
+                        </div>
+                        <div class="player-legs">
+                            <div class="player-leg left"></div>
+                            <div class="player-leg right"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="interaction-prompt" class="hidden">
+                <span id="prompt-text">Enter</span> <kbd>E</kbd>
+            </div>
+            
+            <!-- Mobile Controls -->
+            <div id="mobile-controls">
+                <div id="dpad">
+                    <button id="btn-up" class="dpad-btn">↑</button>
+                    <div class="dpad-row">
+                        <button id="btn-left" class="dpad-btn">←</button>
+                        <button id="btn-down" class="dpad-btn">↓</button>
+                        <button id="btn-right" class="dpad-btn">→</button>
+                    </div>
+                </div>
+                <button id="btn-interact" class="action-btn">E</button>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="screen">
+            <div id="quiz-intro" class="quiz-panel active">
+                <h2 id="building-title">ICS BUILDING</h2>
+                <h3 id="building-subtitle">Information & Computer Studies</h3>
+                <div class="npc-container">
+                    <div class="npc-avatar">
+                        <svg viewBox="0 0 100 100" width="100%" height="100%">
+                            <circle cx="50" cy="45" r="25" fill="#f5cd79" />
+                            <rect x="25" y="75" width="50" height="35" rx="15" fill="#34495e" />
+                            <rect x="20" y="30" width="60" height="15" fill="#2c3e50" />
+                            <path d="M 35 45 Q 50 60 65 45" stroke="#333" stroke-width="4" stroke-linecap="round" fill="none" />
+                        </svg>
+                    </div>
+                    <p class="dialogue" id="intro-dialogue">"Welcome to ICS! Let's see what you know."</p>
+                </div>
+                <button id="btn-start-quiz">Start Challenge</button>
+                <button id="btn-leave-building">Leave</button>
+            </div>
+
+            <div id="quiz-active" class="quiz-panel">
+                <div id="quiz-progress">Question 1/10</div>
+                <h3 id="question-text"></h3>
+                <div id="choices-container"></div>
+                <div id="feedback-container" class="hidden">
+                    <h4 id="feedback-title"></h4>
+                    <p id="feedback-text"></p>
+                    <button id="btn-next-question">Next</button>
+                </div>
+            </div>
+            
+            <div id="quiz-results" class="quiz-panel">
+                <h2>Challenge Complete!</h2>
+                <p id="results-score"></p>
+                <div id="rewards-container"></div>
+                <button id="btn-return-campus">Return to Campus</button>
+            </div>
+        </div>
+        <!-- Facilities Modals -->
+        <div id="canteen-screen" class="screen" style="display:none; background:rgba(0,0,0,0.8); align-items:center; justify-content:center; position:absolute; top:0; left:0; width:100%; height:100%; z-index:200;">
+            <div style="background:white; padding:30px; border-radius:15px; border:4px solid #e67e22; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.5); min-width: 320px;">
+                <h2 style="color:#d35400; margin-bottom:10px;">🍔 Campus Canteen</h2>
+                <p style="margin-bottom:20px; font-weight:bold; color:#2c3e50;">Spend your hard-earned coins here.</p>
+                <div style="display:flex; flex-direction:column; gap:10px; margin-bottom: 20px;">
+                    <button class="btn-buy-food" data-food="fries" data-price="5" style="background:#f1c40f; color:#d35400; border:none; padding:12px 20px; border-radius:8px; font-weight:bold; font-size:1.1rem; cursor:pointer;">Buy Fries (5 🪙)</button>
+                    <button class="btn-buy-food" data-food="milktea" data-price="5" style="background:#d35400; color:white; border:none; padding:12px 20px; border-radius:8px; font-weight:bold; font-size:1.1rem; cursor:pointer;">Buy Milktea (5 🪙)<br><small>+1 Speed (Permanent)</small></button>
+                    <button class="btn-buy-food" data-food="burger" data-price="10" style="background:#27ae60; color:white; border:none; padding:12px 20px; border-radius:8px; font-weight:bold; font-size:1.1rem; cursor:pointer;">Buy Burger (10 🪙)<br><small>+2 Speed (Permanent)</small></button>
+                </div>
+                <button class="btn-facility-close" style="background:#e74c3c; color:white; border:none; padding:10px 20px; border-radius:8px; font-weight:bold; cursor:pointer; width:100%;">Leave</button>
+            </div>
+        </div>
+        
+        <div id="admin-screen" class="screen" style="display:none; background:rgba(0,0,0,0.8); align-items:center; justify-content:center; position:absolute; top:0; left:0; width:100%; height:100%; z-index:200;">
+            <div style="background:white; padding:30px; border-radius:15px; border:4px solid #34495e; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.5); min-width:400px; max-height:80vh; display:flex; flex-direction:column;">
+                <h2 style="color:#2c3e50; margin-bottom:10px;">🏛️ Master Student Records</h2>
+                <p style="margin-bottom:15px; font-weight:bold; color:#7f8c8d;">Global Database of all Foundation Day players!</p>
+                <div style="flex:1; overflow-y:auto; margin-bottom: 20px; border: 2px solid #bdc3c7; border-radius: 8px;">
+                    <table style="width:100%; border-collapse:collapse; text-align:left;">
+                        <thead style="background:#ecf0f1; position:sticky; top:0;">
+                            <tr>
+                                <th style="padding:10px; border-bottom:2px solid #bdc3c7;">Name</th>
+                                <th style="padding:10px; border-bottom:2px solid #bdc3c7;">Gender</th>
+                                <th style="padding:10px; border-bottom:2px solid #bdc3c7;">Dept</th>
+                                <th style="padding:10px; border-bottom:2px solid #bdc3c7;">Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-global-list">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+                <button class="btn-facility-close" style="background:#e74c3c; color:white; border:none; padding:10px 20px; border-radius:8px; font-weight:bold; cursor:pointer; width:100%;">Leave</button>
+            </div>
+        </div>
+
+        <div id="center-screen" class="screen" style="display:none; background:rgba(0,0,0,0.8); align-items:center; justify-content:center; position:absolute; top:0; left:0; width:100%; height:100%; z-index:200;">
+            <div style="background:white; padding:30px; border-radius:15px; border:4px solid #16a085; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.5); max-width: 400px;">
+                <h2 style="color:#16a085; margin-bottom:10px;">📢 Student Center</h2>
+                <div style="background: #f1c40f; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 3px dashed #d35400;">
+                    <h3 style="color:#d35400;">WELCOME TO FOUNDATION DAY 2026!</h3>
+                    <p style="margin-top: 10px; color:#2c3e50; font-weight: bold;">Explore the campus, visit the Academic Buildings (ICS, ITE, IBE) to take quizzes, and earn coins to buy food at the Canteen!</p>
+                </div>
+                <button class="btn-facility-close" style="background:#e74c3c; color:white; border:none; padding:10px 20px; border-radius:8px; font-weight:bold; cursor:pointer; width:100%;">Leave</button>
+            </div>
+        </div>
+
+        <div id="library-screen" class="screen" style="display:none; background:rgba(0,0,0,0.8); align-items:center; justify-content:center; position:absolute; top:0; left:0; width:100%; height:100%; z-index:200;">
+            <div style="background:white; padding:30px; border-radius:15px; border:4px solid #8e44ad; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.5); max-width: 500px; max-height: 80vh; display: flex; flex-direction: column;">
+                <h2 style="color:#8e44ad; margin-bottom:10px;">📚 Library Study Guide</h2>
+                <p style="margin-bottom:5px; font-weight:bold; color:#2c3e50;">Select a subject to review before taking the quiz.</p>
+                <p style="margin-bottom:15px; font-weight:900; color:#e74c3c; background:#fadbd8; padding:5px; border-radius:4px;">WARNING: You can only use this cheat sheet ONCE! Memorize it now!</p>
+                <div style="display:flex; gap:10px; margin-bottom:15px;">
+                    <button class="lib-tab btn" data-target="ICS" style="flex:1;">ICS</button>
+                    <button class="lib-tab btn outline" data-target="ITE" style="flex:1;">ITE</button>
+                    <button class="lib-tab btn outline" data-target="IBE" style="flex:1;">IBE</button>
+                </div>
+                <div id="library-content" style="flex:1; overflow-y:auto; text-align:left; background:#ecf0f1; padding:15px; border-radius:8px; margin-bottom:15px; border: 2px solid #bdc3c7;">
+                    <!-- Questions will be injected here -->
+                </div>
+                <button class="btn-facility-close" style="background:#e74c3c; color:white; border:none; padding:10px 20px; border-radius:8px; font-weight:bold; cursor:pointer; width:100%;">Leave Library</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts in logical order -->
+    <script src="js/storage.js"></script>
+    <script src="js/questions.js"></script>
+    <script src="js/progression.js"></script>
+    <script src="js/campus.js"></script>
+    <script src="js/minimap.js"></script>
+    <script src="js/npc.js"></script>
+    <script src="js/facilities.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/interaction.js"></script>
+    <script src="js/quiz.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
