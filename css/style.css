@@ -338,55 +338,24 @@ body.hide-celebration .balloon {
         left: calc(8px + env(safe-area-inset-left, 0px)) !important;
         right: auto !important;
         bottom: auto !important;
-        padding: 5px 8px !important;
-        gap: 6px !important;
-        max-width: calc(100vw - 165px) !important;
+        padding: 5px 12px !important;
+        gap: 8px !important;
+        max-width: calc(100vw - 20px) !important;
         flex-wrap: wrap !important;
         border-radius: 14px !important;
         z-index: 1000 !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background: rgba(255, 255, 255, 0.95) !important;
     }
-    .hud-item { font-size: 0.72rem !important; }
-    #hud-level { font-size: 0.78rem !important; padding-right: 6px !important; }
-    #hud-xp-container { width: 55px !important; }
-    #btn-toggle-celebration { font-size: 0.65rem !important; padding: 2px 6px !important; }
+    .hud-item { font-size: 0.75rem !important; }
+    #hud-level { font-size: 0.8rem !important; padding-right: 8px !important; }
+    #hud-xp-container { width: 65px !important; }
+    #btn-toggle-celebration { font-size: 0.68rem !important; padding: 3px 8px !important; }
 
-    /* ---- TOP STUDENTS PANEL (TOP-RIGHT, COMPACT & READABLE) ---- */
+    /* ---- HIDE LEADERBOARD ON MOBILE (FREES UP SCREEN & PERFORMANCE) ---- */
     #leaderboard-panel {
-        display: flex !important;
-        position: fixed !important;
-        top: calc(8px + env(safe-area-inset-top, 0px)) !important;
-        right: calc(8px + env(safe-area-inset-right, 0px)) !important;
-        left: auto !important;
-        bottom: auto !important;
-        width: 145px !important;
-        max-height: 36vh !important;
-        padding: 8px 6px !important;
-        gap: 4px !important;
-        font-size: 0.68rem !important;
-        border-radius: 12px !important;
-        border-width: 2px !important;
-        z-index: 1000 !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-        background: rgba(255,255,255,0.92) !important;
-    }
-    #leaderboard-panel h3 {
-        font-size: 0.8rem !important;
-        padding-bottom: 4px !important;
-        margin-bottom: 2px !important;
-    }
-    .dept-leaderboard {
-        padding: 4px 6px !important;
-        margin-bottom: 3px !important;
-    }
-    .dept-leaderboard h4 {
-        font-size: 0.72rem !important;
-        padding: 2px 0 !important;
-        margin-bottom: 3px !important;
-    }
-    .dept-leaderboard li {
-        font-size: 0.65rem !important;
-        padding: 2px 4px !important;
+        display: none !important;
     }
 
     /* ---- MINIMAP (BOTTOM-RIGHT, DIRECTLY ABOVE E BUTTON) ---- */
@@ -454,11 +423,11 @@ body.hide-celebration .balloon {
         position: absolute !important;
         inset: 0 !important;
         border-radius: 50% !important;
-        background: radial-gradient(circle, rgba(40,40,40,0.45) 0%, rgba(10,10,10,0.75) 100%) !important;
-        border: 3px solid rgba(255, 255, 255, 0.35) !important;
+        background: radial-gradient(circle, rgba(30,30,30,0.7) 0%, rgba(10,10,10,0.9) 100%) !important;
+        border: 3px solid rgba(255, 255, 255, 0.4) !important;
         box-shadow: 0 6px 18px rgba(0,0,0,0.55), inset 0 2px 6px rgba(255,255,255,0.2) !important;
-        backdrop-filter: blur(8px) !important;
-        -webkit-backdrop-filter: blur(8px) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -505,7 +474,8 @@ body.hide-celebration .balloon {
         -webkit-tap-highlight-color: transparent !important;
         user-select: none !important;
         -webkit-user-select: none !important;
-        backdrop-filter: blur(6px) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -547,18 +517,27 @@ body.hide-celebration .balloon {
         z-index: 1050 !important;
     }
 
-    /* ---- PERFORMANCE OPTIMIZATIONS FOR MOBILE (ZERO LAG) ---- */
+    /* ---- PERFORMANCE OPTIMIZATIONS FOR MOBILE (ZERO LAG 60FPS) ---- */
     .building {
-        box-shadow: 6px 12px 18px rgba(0,0,0,0.35) !important;
+        box-shadow: 4px 8px 14px rgba(0,0,0,0.3) !important;
+        contain: layout paint !important;
     }
     .building:hover {
         transform: none !important;
     }
     .tree {
-        filter: drop-shadow(0 4px 4px rgba(0,0,0,0.2)) !important;
+        filter: none !important; /* Eliminates 40 GPU blur filter passes per frame! */
+        contain: layout paint !important;
+    }
+    .decor {
+        filter: none !important;
+        contain: layout paint !important;
     }
     .balloon {
         box-shadow: none !important;
+    }
+    #world {
+        contain: layout paint !important;
     }
 
     /* ---- QUIZ / FACILITY SCREENS ---- */

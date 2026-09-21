@@ -3,8 +3,10 @@ const NPCManager = {
     
     init: function() {
         const map = document.getElementById('map');
+        const isMobile = window.innerWidth < 768;
+        const count = isMobile ? 4 : 10;
         
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < count; i++) {
             const npc = document.createElement('div');
             npc.className = 'player-sprite npc';
             if (Math.random() > 0.5) {
@@ -79,7 +81,14 @@ const NPCManager = {
     },
     
     update: function() {
+        const playerObj = (typeof Player !== 'undefined') ? Player : window.Player;
+
         this.npcs.forEach(npc => {
+            if (playerObj) {
+                const distToPlayer = Math.abs(playerObj.x - npc.x) + Math.abs(playerObj.y - npc.y);
+                if (distToPlayer > 1200) return; // Skip far offscreen NPCs
+            }
+
             if (npc.state === 'idle') {
                 npc.timer--;
                 if (npc.timer <= 0) {
