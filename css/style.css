@@ -300,3 +300,136 @@ body.hide-celebration .balloon {
     20% { opacity: 0; transform: translate(-50%, -10px) scale(0.8); }
     100% { opacity: 0; transform: translate(-50%, 5px) scale(0.8); }
 }
+
+/* ========================================
+   MOBILE D-PAD CONTROLS
+   ======================================== */
+#mobile-controls { display: none; }
+
+@media (max-width: 768px), (pointer: coarse) {
+    #mobile-controls {
+        display: flex;
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        z-index: 500;
+        align-items: flex-end;
+        gap: 20px;
+        pointer-events: auto;
+    }
+
+    #dpad {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .dpad-row {
+        display: flex;
+        gap: 4px;
+    }
+
+    .dpad-btn {
+        width: 56px;
+        height: 56px;
+        font-size: 1.5rem;
+        background: rgba(0,0,0,0.55);
+        color: white;
+        border: 3px solid rgba(255,255,255,0.3);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 0;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        backdrop-filter: blur(4px);
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+    }
+
+    .dpad-btn:active {
+        background: rgba(255,255,255,0.3);
+        transform: scale(0.9);
+    }
+
+    .action-btn {
+        width: 70px;
+        height: 70px;
+        font-size: 1.2rem;
+        font-weight: 900;
+        background: rgba(231, 76, 60, 0.85);
+        color: white;
+        border: 3px solid rgba(255,255,255,0.4);
+        border-radius: 50%;
+        box-shadow: 0 4px 15px rgba(231,76,60,0.5);
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+        backdrop-filter: blur(4px);
+        margin-bottom: 4px;
+    }
+
+    .action-btn:active {
+        transform: scale(0.9);
+        background: rgba(192,57,43,0.9);
+    }
+
+    /* Scale down HUD on mobile */
+    #hud {
+        top: 10px;
+        left: 10px;
+        padding: 8px 14px;
+        gap: 10px;
+        max-width: calc(100vw - 20px);
+    }
+    .hud-item { font-size: 0.85rem; }
+    #hud-level { font-size: 0.9rem; padding-right: 10px; }
+    #hud-xp-container { width: 90px; }
+
+    /* Move leaderboard below on mobile */
+    #leaderboard-panel {
+        display: none;
+    }
+
+    /* Title screen mobile */
+    #title-screen h1 { font-size: 2rem; }
+    .branding { padding: 0 15px; }
+    .setup-container { padding: 20px; width: 92%; }
+
+    /* Quiz screen mobile */
+    #quiz-screen { padding: 10px; }
+    #question-text { font-size: 1.1rem; }
+    #choices-container { gap: 8px; }
+    .choice-btn { font-size: 0.95rem; padding: 12px; }
+
+    /* Interaction prompt above the dpad */
+    #interaction-prompt {
+        bottom: 155px;
+        left: 20px;
+        transform: none;
+        font-size: 0.8rem;
+        padding: 6px 10px;
+    }
+
+    /* Minimap smaller on mobile */
+    #minimap {
+        width: 80px;
+        height: 80px;
+        bottom: 20px;
+    }
+
+    /* Logout button - keep visible on mobile but smaller */
+    #btn-logout-fixed {
+        font-size: 0.8rem !important;
+        padding: 10px 16px !important;
+        bottom: 12px !important;
+        left: 200px !important;
+    }
+
+    /* Celebration toggle smaller on mobile */
+    #btn-toggle-celebration {
+        font-size: 0.75rem !important;
+        padding: 4px 8px !important;
+    }
+}
