@@ -530,29 +530,47 @@ body.hide-celebration .balloon {
 
     /* ---- PERFORMANCE OPTIMIZATIONS FOR MOBILE (ZERO LAG 60FPS) ---- */
     .building {
-        box-shadow: 4px 8px 14px rgba(0,0,0,0.3) !important;
+        box-shadow: 3px 6px 10px rgba(0,0,0,0.25) !important;
         overflow: visible !important;
+        transition: none !important;
     }
     .building:hover {
         transform: none !important;
     }
+    /* Ensure child parts are visible but DON'T override sign's display */
     .building .roof,
     .building .facade,
-    .building .sign,
     .building .door-frame,
-    .building .steps-3d,
-    .roof-icon {
-        display: flex !important;
+    .building .steps-3d {
         visibility: visible !important;
     }
+    .roof-icon {
+        visibility: visible !important;
+    }
+    /* Fix building name text: must be block + centered, NOT flex */
+    .building .sign {
+        display: block !important;
+        text-align: center !important;
+        visibility: visible !important;
+    }
+    .building .sign h3 {
+        text-align: center !important;
+        margin: 0 auto !important;
+    }
     .tree {
-        filter: none !important; /* Eliminates 40 GPU blur filter passes per frame! */
+        filter: none !important;
     }
     .decor {
         filter: none !important;
     }
     .balloon {
         box-shadow: none !important;
+    }
+    .confetti-piece {
+        will-change: auto !important;
+    }
+    .npc-chat {
+        display: none !important; /* Hide chat bubbles on mobile for performance */
     }
     #world {
         overflow: visible !important;
